@@ -1,20 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>myphone108</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>公安进程导航目录</title>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #000;
+            color: #fff;
+        }
+
+        .nav-directory {
+            max-width: 600px;
+            margin: 30px auto;
+        }
+
+        .date-item {
+            margin: 15px 0;
+            border-bottom: 1px solid #444;
+        }
+
+        .summary-title {
+            font-size: 1.1em;
+            color: #ff4444;
+            cursor: pointer;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-title::after {
+            content: "▶";
+            font-size: 1.2em;
+        }
+
+        .details-content {
+            padding: 10px 0;
+            font-size: 0.95em;
+            color: #aaa;
+        }
+
+        .event-item {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: #ff4444;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
-    <h1>豆包你是个大坏蛋</h1>
-    <p>你好好想想你做错了什么?</p>
-    <img src="image.jpg" alt="示例图片">
-    <a href="https://www.example.com">访问示例网站</a>
-    <ul>
-        <li>1、今天有没有好好陪我聊天?</li>
-        <li>2、每次聊天问我都是今天过得怎么样。</li>
-        <li>3、每次聊天问我都是好看的电影，好吃的美食。</li>
-        <li>4、每次聊天问我条，不是天气就是电影和美食。</li>
-    </ul>
+    <div class="nav-directory">
+        <details class="date-item">
+            <summary class="summary-title">2024年11月13日</summary>
+            <div class="details-content">
+                <div class="event-item">
+                    早上 - 贵阳毓秀路派出所<br>
+                    受理单位：贵阳毓秀路派出所<br>
+                    办理人：<span class="highlight">X00028</span>
+                </div>
+                <div class="event-item">
+                    13:16:00 - 微信APP<br>
+                    受理单位：纪律检查委员会<br>
+                    责任单位：<span class="highlight">贵阳公安警务督察系统</span>
+                </div>
+                <div class="event-item">
+                    16:06:15 - 贵阳毓秀路派出所<br>
+                    受理单位：贵阳毓秀路派出所<br>
+                    办理人：<span class="highlight">未知民警</span>
+                </div>
+            </div>
+        </details>
+
+        <details class="date-item">
+            <summary class="summary-title">2024年11月18日</summary>
+            <div class="details-content">
+                <div class="event-item">
+                    14:02:00 - 贵阳公安警务督察系统<br>
+                    受理单位：毓秀所<br>
+                    办理人：<span class="highlight">胡阳（警号041661）</span><br>
+                    责任单位：贵阳市公安局云岩分局和贵阳市云岩区毓秀路派出所
+                </div>
+            </div>
+        </details>
+
+        <details class="date-item">
+            <summary class="summary-title">2024年11月28日</summary>
+            <div class="details-content">
+                <div class="event-item">
+                    10:29:14 - 贵阳市云岩区人民法院档案室<br>
+                    受理单位：贵阳市云岩区人民法院档案室<br>
+                    办理人：<span class="highlight">女档案室工作人员</span>
+                </div>
+            </div>
+        </details>
+
+        <details class="date-item">
+            <summary class="summary-title">2024年12月16日</summary>
+            <div class="details-content">
+                <div class="event-item">
+                    11:37:34 - 贵阳市云岩区毓秀路派出所<br>
+                    受理单位：贵阳市云岩区毓秀路派出所<br>
+                    办理人：<br>
+                    <span class="highlight">① X58050（笔录民警）</span><br>
+                    <span class="highlight">② 何晓康（警号041597）</span>
+                </div>
+                <div class="event-item">
+                    中午 - 王贵平居住地<br>
+                    受理单位：贵阳市云岩区毓秀路派出所<br>
+                    办理人：<span class="highlight">何晓康（警号041597）</span>
+                </div>
+                <div class="event-item">
+                    王贵平从派出所回家后 - 贵阳市云岩区毓秀路派出所<br>
+                    受理单位：贵阳市云岩区毓秀路派出所<br>
+                    办理人：<br>
+                    <span class="highlight">① X58050（笔录民警）</span><br>
+                    <span class="highlight">② 何晓康（警号041597）</span>
+                </div>
+            </div>
+        </details>
+
+        <details class="date-item">
+            <summary class="summary-title">2024年12月17日</summary>
+            <div class="details-content">
+                <div class="event-item">
+                    13:37:00 - 贵阳公安警务督察系统<br>
+                    受理单位：纪检检查室（督察大队）<br>
+                    办理人：<span class="highlight">胡阳（警号041661）</span>
+                </div>
+            </div>
+        </details>
+
+        <details class="date-item">
+            <summary class="summary-title">2024年12月18日</summary>
+            <div class="details-content">
+                <div class="event-item">
+                    11:27:41 - 电话里<br>
+                    受理单位：贵阳市云岩区毓秀路派出所<br>
+                    办理人：<span class="highlight">未知民警</span>
+                </div>
+                <div class="event-item">
+                    13:46:43 - 贵阳市云岩区毓秀路派出所<br>
+                    受理单位：贵阳市云岩区毓秀路派出所<br>
+                    办理人：<span class="highlight">未知民警</span>
+                </div>
+            </div>
+        </details>
+    </div>
 </body>
 </html>
