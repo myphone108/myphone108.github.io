@@ -2,153 +2,136 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>公安进程导航目录</title>
+    <title>myphone108 · 个人主页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&display=swap');
         body {
-            font-family: "Segoe UI", sans-serif;
-            background: #000;
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
             color: #fff;
+            overflow-x: hidden;
         }
-
-        .nav-directory {
-            max-width: 600px;
-            margin: 30px auto;
-        }
-
-        .date-item {
-            margin: 15px 0;
-            border-bottom: 1px solid #444;
-        }
-
-        .summary-title {
-            font-size: 1.1em;
-            color: #ff4444;
-            cursor: pointer;
-            padding: 10px 0;
+        .hero {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            text-align: center;
+            position: relative;
+            z-index: 1;
         }
-
-        .summary-title::after {
-            content: "▶";
-            font-size: 1.2em;
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 50% 30%, rgba(0,255,255,0.15) 0%, transparent 70%);
+            z-index: -1;
         }
-
-        .details-content {
-            padding: 10px 0;
-            font-size: 0.95em;
-            color: #aaa;
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.3);
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 2px;
+            border: 4px solid #fff2;
+            user-select: none;
         }
-
-        .event-item {
-            margin: 8px 0;
-            line-height: 1.6;
+        .username {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #00c6ff, #ff4e50, #f9d423);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
-        .highlight {
-            color: #ff4444;
+        .subtitle {
+            margin-top: 12px;
+            font-size: 1.2rem;
+            color: #b2ebf2;
+            letter-spacing: 1px;
+        }
+        .links {
+            margin: 40px 0 0 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+        }
+        .link-card {
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid #00c6ff44;
+            border-radius: 18px;
+            padding: 24px 32px;
+            min-width: 180px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s, border 0.2s;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+            cursor: pointer;
+        }
+        .link-card:hover {
+            transform: translateY(-8px) scale(1.04);
+            border: 1.5px solid #ff4e50cc;
+            box-shadow: 0 8px 32px rgba(0,255,255,0.15);
+            background: rgba(0,198,255,0.12);
+        }
+        .link-card a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
             font-weight: 500;
+            letter-spacing: 1px;
+        }
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            color: #888;
+            font-size: 0.95rem;
+            padding-bottom: 24px;
+        }
+        @media (max-width: 600px) {
+            .hero { min-height: 40vh; }
+            .avatar { width: 80px; height: 80px; font-size: 2rem; }
+            .username { font-size: 1.5rem; }
+            .links { gap: 12px; }
+            .link-card { padding: 16px 12px; min-width: 120px; }
         }
     </style>
 </head>
 <body>
-    <div class="nav-directory">
-        <details class="date-item">
-            <summary class="summary-title">2024年11月13日</summary>
-            <div class="details-content">
-                <div class="event-item">
-                    早上 - 贵阳毓秀路派出所<br>
-                    受理单位：贵阳毓秀路派出所<br>
-                    办理人：<span class="highlight">X00028</span>
-                </div>
-                <div class="event-item">
-                    13:16:00 - 微信APP<br>
-                    受理单位：纪律检查委员会<br>
-                    责任单位：<span class="highlight">贵阳公安警务督察系统</span>
-                </div>
-                <div class="event-item">
-                    16:06:15 - 贵阳毓秀路派出所<br>
-                    受理单位：贵阳毓秀路派出所<br>
-                    办理人：<span class="highlight">未知民警</span>
-                </div>
+    <div class="hero">
+        <div class="avatar">M</div>
+        <div class="username">myphone108</div>
+        <div class="subtitle">欢迎来到我的个人主页</div>
+        <div class="links">
+            <div class="link-card">
+                <a href="https://github.com/myphone108" target="_blank">GitHub</a>
             </div>
-        </details>
-
-        <details class="date-item">
-            <summary class="summary-title">2024年11月18日</summary>
-            <div class="details-content">
-                <div class="event-item">
-                    14:02:00 - 贵阳公安警务督察系统<br>
-                    受理单位：毓秀所<br>
-                    办理人：<span class="highlight">胡阳（警号041661）</span><br>
-                    责任单位：贵阳市公安局云岩分局和贵阳市云岩区毓秀路派出所
-                </div>
+            <div class="link-card">
+                <a href="mailto:myphone108@gmail.com">邮箱联系</a>
             </div>
-        </details>
-
-        <details class="date-item">
-            <summary class="summary-title">2024年11月28日</summary>
-            <div class="details-content">
-                <div class="event-item">
-                    10:29:14 - 贵阳市云岩区人民法院档案室<br>
-                    受理单位：贵阳市云岩区人民法院档案室<br>
-                    办理人：<span class="highlight">女档案室工作人员</span>
-                </div>
+            <div class="link-card">
+                <a href="/nav.html">进程导航目录</a>
             </div>
-        </details>
-
-        <details class="date-item">
-            <summary class="summary-title">2024年12月16日</summary>
-            <div class="details-content">
-                <div class="event-item">
-                    11:37:34 - 贵阳市云岩区毓秀路派出所<br>
-                    受理单位：贵阳市云岩区毓秀路派出所<br>
-                    办理人：<br>
-                    <span class="highlight">① X58050（笔录民警）</span><br>
-                    <span class="highlight">② 何晓康（警号041597）</span>
-                </div>
-                <div class="event-item">
-                    中午 - 王贵平居住地<br>
-                    受理单位：贵阳市云岩区毓秀路派出所<br>
-                    办理人：<span class="highlight">何晓康（警号041597）</span>
-                </div>
-                <div class="event-item">
-                    王贵平从派出所回家后 - 贵阳市云岩区毓秀路派出所<br>
-                    受理单位：贵阳市云岩区毓秀路派出所<br>
-                    办理人：<br>
-                    <span class="highlight">① X58050（笔录民警）</span><br>
-                    <span class="highlight">② 何晓康（警号041597）</span>
-                </div>
+            <div class="link-card">
+                <a href="https://space.bilibili.com/" target="_blank">Bilibili</a>
             </div>
-        </details>
-
-        <details class="date-item">
-            <summary class="summary-title">2024年12月17日</summary>
-            <div class="details-content">
-                <div class="event-item">
-                    13:37:00 - 贵阳公安警务督察系统<br>
-                    受理单位：纪检检查室（督察大队）<br>
-                    办理人：<span class="highlight">胡阳（警号041661）</span>
-                </div>
-            </div>
-        </details>
-
-        <details class="date-item">
-            <summary class="summary-title">2024年12月18日</summary>
-            <div class="details-content">
-                <div class="event-item">
-                    11:27:41 - 电话里<br>
-                    受理单位：贵阳市云岩区毓秀路派出所<br>
-                    办理人：<span class="highlight">未知民警</span>
-                </div>
-                <div class="event-item">
-                    13:46:43 - 贵阳市云岩区毓秀路派出所<br>
-                    受理单位：贵阳市云岩区毓秀路派出所<br>
-                    办理人：<span class="highlight">未知民警</span>
-                </div>
-            </div>
-        </details>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2024 myphone108. All rights reserved.
     </div>
 </body>
 </html>
