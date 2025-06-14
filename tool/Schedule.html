@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>生活日程看板</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+        body {
+            background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+            min-height: 100vh;
+            color: #222;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.5s, color 0.5s;
+        }
+        /* 页头样式 */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 10px 15px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.5s, border-color 0.5s;
+        }
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            max-width: calc(100% - 180px);
+        }
+        .timestamp {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1a73e8;
+            transition: color 0.5s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .location {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+            transition: color 0.5s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .home-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(26,115,232,0.3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            min-width: 80px;
+        }
+        .home-btn:hover {
+            background: #0d62d9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26,115,232,0.4);
+        }
+        /* 添加昼夜切换按钮样式 */
+        .theme-toggle-btn {
+            background: transparent;
+            border: none;
+            color: #1a73e8;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        .theme-toggle-btn:hover {
+            background: rgba(26,115,232,0.1);
+        }
+        .theme-toggle-btn i {
+            font-size: 16px;
+        }
+        /* 页脚样式 */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            text-align: center;
+            padding: 12px 0;
+            font-size: 14px;
+            color: #555;
+            border-top: 1px solid #e0e0e0;
+            z-index: 1000;
+            transition: background 0.5s, border-color 0.5s, color 0.5s;
+        }
+        .container {
+            max-width: 900px;
+            margin: 90px auto 70px auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(60,120,200,0.12);
+            padding: 20px 15px 15px 15px;
+            position: relative;
+            flex: 1;
+            transition: background 0.5s, box-shadow 0.5s;
+            width: 95%;
+        }
+        h1 {
+            color: #1a73e8;
+            font-size: 1.8em;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 12px rgba(26,115,232,0.2);
+            text-align: center;
+            font-weight: 700;
+            padding: 10px 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.7));
+            border-radius: 12px;
+            transition: background 0.5s, text-shadow 0.5s;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .filter-section {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(26,115,232,0.3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            min-width: 44px;
+            min-height: 36px;
+            justify-content: center;
+        }
+        .btn:hover {
+            background: #0d62d9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26,115,232,0.4);
+        }
+        .btn i {
+            font-size: 14px;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #1a73e8;
+            color: #1a73e8;
+        }
+        .btn-outline:hover {
+            background: #1a73e8;
+            color: white;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            box-shadow: 0 2px 8px rgba(231,76,60,0.3);
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+            box-shadow: 0 4px 12px rgba(231,76,60,0.4);
+        }
+        .btn-success {
+            background: #27ae60;
+            box-shadow: 0 2px 8px rgba(39,174,96,0.3);
+        }
+        .btn-success:hover {
+            background: #219653;
+            box-shadow: 0 4px 12px rgba(39,174,96,0.4);
+        }
+        .schedule-category {
+            margin: 15px 0 8px 0;
+            gap: 10px;
+            text-align: right;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .category-tag {
+            font-size: 13px;
+            font-weight: bold;
+            border: 1.5px solid #e1e4e8;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            transition: background 0.2s, color 0.2s;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 50px;
+            text-align: center;
+        }
+        .category-tag.active {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
+        .category-tag:hover {
+            filter: brightness(1.1);
+            transform: scale(1.08);
+        }
+        .tag-daily { background: #fce4ec; color: #e91e63; border-color: #f8bbd0; }
+        .tag-daily.active { background: #e91e63; color: white; }
+        .tag-social { background: #e3f2fd; color: #1976d2; border-color: #bbdefb; }
+        .tag-social.active { background: #1976d2; color: white; }
+        .tag-bill { background: #e8f5e9; color: #388e3c; border-color: #c8e6c9; }
+        .tag-bill.active { background: #388e3c; color: white; }
+        .tag-traffic { background: #fff3e0; color: #ef6c00; border-color: #ffe0b2; }
+        .tag-traffic.active { background: #ef6c00; color: white; }
+        .tag-other { background: #f3e5f5; color: #8e24aa; border-color: #e1bee7; }
+        .tag-other.active { background: #8e24aa; color: white; }
+        .schedule-board {
+            margin-top: 10px;
+        }
+        .schedule-item {
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #f8fafc 80%, #e0eafc 100%);
+            box-shadow: 0 2px 12px rgba(60,120,200,0.07);
+            overflow: hidden;
+            transition: box-shadow 0.2s, transform 0.2s, background 0.5s;
+            padding: 15px;
+            border-left: none !important;
+        }
+        .schedule-item:hover {
+            box-shadow: 0 6px 24px rgba(60,120,200,0.18);
+            transform: translateY(-2px) scale(1.01);
+        }
+        .schedule-item.overdue {
+            background: linear-gradient(90deg, #fbeaea 80%, #ffeaea 100%);
+            opacity: 1;
+            animation: shake 0.3s;
+        }
+        @keyframes shake {
+            0% { transform: translateX(0);}
+            20% { transform: translateX(-2px);}
+            40% { transform: translateX(2px);}
+            60% { transform: translateX(-2px);}
+            80% { transform: translateX(2px);}
+            100% { transform: translateX(0);}
+        }
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 0;
+            flex-wrap: wrap;
+        }
+        .item-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: color 0.3s;
+            flex-wrap: wrap;
+        }
+        .item-title:hover {
+            color: #1a73e8;
+        }
+        .item-date {
+            font-size: 14px;
+            color: #888;
+            font-weight: 500;
+            margin-bottom: 0;
+            display: block;
+            position: relative;
+            z-index: 1;
+            transition: color 0.5s;
+        }
+        .item-weekday {
+            font-size: 12px;
+            color: #888;
+            margin-left: 8px;
+            transition: color 0.5s;
+        }
+        .item-status {
+            font-size: 14px;
+            padding: 2px 12px;
+            border-radius: 14px;
+            font-weight: bold;
+            margin-bottom: 0;
+            display: inline-block;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(60,120,200,0.08);
+            border: 2px solid transparent;
+            margin-top: 12px;
+        }
+        .status-normal { color: #fff; background: #27ae60; border-color: #27ae60;}
+        .status-warning { color: #fff; background: #f39c12; border-color: #f39c12;}
+        .status-danger { color: #fff; background: #e74c3c; border-color: #e74c3c;}
+        .status-overdue { color: #fff; background: #c0392b; border-color: #c0392b;}
+        .item-priority {
+            display: inline-block;
+            margin-top: 8px;
+            margin-bottom: 2px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 2px 8px;
+            background: #f5f7fa;
+            color: #1a5fb4;
+            border: 1px solid #b3c6e7;
+            opacity: 0.95;
+            position: static;
+            box-shadow: 0 1px 4px rgba(60,120,200,0.06);
+            vertical-align: middle;
+            transition: background 0.5s, color 0.5s, border-color 0.5s;
+        }
+        .item-priority.紧急 { background: #e74c3c; color: #fff; border: none;}
+        .item-priority.重要 { background: #f39c12; color: #fff; border: none;}
+        .item-priority.普通 { background: #27ae60; color: #fff; border: none;}
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: #e1e4e8;
+            margin-top: 8px;
+            margin-bottom: 2px;
+            overflow: hidden;
+            transition: background 0.5s;
+        }
+        .progress-inner {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #1a5fb4, #27ae60);
+            transition: width 0.5s;
+        }
+        .item-desc {
+            color: #444;
+            font-size: 14px;
+            line-height: 1.6;
+            text-indent: 2em;
+            margin-bottom: 4px;
+            margin-top: 6px;
+            transition: color 0.5s;
+        }
+        .empty-tip {
+            text-align: center;
+            padding: 25px;
+            color: #95a5a6;
+            font-size: 15px;
+            letter-spacing: 1px;
+            transition: color 0.5s;
+        }
+        .item-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .action-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            min-width: 60px;
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .edit-btn {
+            color: #3498db;
+        }
+        .edit-btn:hover {
+            background: #ebf5fb;
+        }
+        .delete-btn {
+            color: #e74c3c;
+        }
+        .delete-btn:hover {
+            background: #fbeaea;
+        }
+        
+        /* 移动端优化样式 */
+        @media (max-width: 768px) {
+            .container { 
+                padding: 15px 10px; 
+                margin: 80px auto 60px auto;
+                width: 98%;
+            }
+            h1 { 
+                font-size: 1.6em;
+                padding: 8px 0;
+                margin-bottom: 12px;
+            }
+            .timestamp { 
+                font-size: 15px; 
+            }
+            .location {
+                font-size: 12px;
+            }
+            .home-btn { 
+                padding: 6px 10px; 
+                font-size: 13px; 
+                min-width: 70px;
+            }
+            .theme-toggle-btn {
+                padding: 6px 8px;
+                font-size: 13px;
+            }
+            .theme-toggle-btn i {
+                font-size: 14px;
+            }
+            .btn {
+                padding: 7px 12px;
+                font-size: 13px;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .filter-section {
+                justify-content: center;
+                gap: 6px;
+            }
+            .search-section {
+                width: 100%;
+            }
+            #searchInput {
+                width: 100%;
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            .item-title { 
+                font-size: 1.05em;
+                gap: 6px;
+            }
+            .item-date, .item-status { 
+                font-size: 13px; 
+            }
+            .item-priority { 
+                font-size: 11px; 
+                padding: 2px 8px; 
+            }
+            .item-header { 
+                flex-direction: column; 
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .item-status {
+                margin-top: 8px;
+            }
+            .item-desc {
+                font-size: 13px;
+                line-height: 1.6;
+                text-indent: 1.5em;
+            }
+            .category-tag {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+            .modal-content {
+                width: 95%;
+            }
+            .modal-body {
+                padding: 15px;
+            }
+            .form-group {
+                margin-bottom: 12px;
+            }
+            .form-control {
+                padding: 9px;
+                font-size: 14px;
+            }
+            .action-btn {
+                padding: 5px 8px;
+                font-size: 13px;
+                min-width: 50px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header {
+                padding: 8px 12px;
+            }
+            .header-left {
+                max-width: calc(100% - 160px);
+            }
+            .timestamp {
+                font-size: 14px;
+            }
+            .location {
+                font-size: 11px;
+            }
+            .home-btn {
+                min-width: 65px;
+                padding: 5px 8px;
+            }
+            h1 {
+                font-size: 1.4em;
+            }
+            .item-title {
+                font-size: 1em;
+            }
+            .item-desc {
+                font-size: 12.5px;
+                text-indent: 1em;
+            }
+            .item-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .action-btn {
+                min-width: 45%;
+                margin-bottom: 5px;
+            }
+        }
+
+        /* 暗色模式样式 */
+        body.dark-mode {
+            background: linear-gradient(120deg, #232526 0%, #414345 100%);
+            color: #eee;
+        }
+        body.dark-mode .container {
+            background: rgba(30,32,36,0.98);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        body.dark-mode .schedule-item {
+            background: linear-gradient(90deg, #232526 80%, #414345 100%);
+        }
+        body.dark-mode .schedule-item.overdue {
+            background: linear-gradient(90deg, #3c2323 80%, #5a2323 100%);
+        }
+        body.dark-mode .item-desc {
+            color: #ccc;
+        }
+        body.dark-mode .empty-tip {
+            color: #aaa;
+        }
+        body.dark-mode .item-title {
+            color: #6eaaff;
+        }
+        body.dark-mode .item-title:hover {
+            color: #4d9dff;
+        }
+        body.dark-mode .btn-outline {
+            border-color: #6eaaff;
+            color: #6eaaff;
+        }
+        body.dark-mode .btn-outline:hover {
+            background: #6eaaff;
+            color: #232526;
+        }
+        body.dark-mode .action-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        body.dark-mode header {
+            background: rgba(30, 32, 36, 0.95);
+            border-bottom: 1px solid #444;
+        }
+        body.dark-mode footer {
+            background: rgba(30, 32, 36, 0.95);
+            border-top: 1px solid #444;
+            color: #aaa;
+        }
+        body.dark-mode .timestamp {
+            color: #6eaaff;
+        }
+        body.dark-mode .location {
+            color: #aaa;
+        }
+        body.dark-mode .theme-toggle-btn {
+            color: #6eaaff;
+        }
+        body.dark-mode .theme-toggle-btn:hover {
+            background: rgba(110, 170, 255, 0.1);
+        }
+        body.dark-mode .item-date {
+            color: #aaa;
+        }
+        body.dark-mode .item-weekday {
+            color: #aaa;
+        }
+        body.dark-mode .progress-bar {
+            background: #333;
+        }
+        body.dark-mode .item-priority {
+            background: #2d2f33;
+            color: #8ab4f8;
+            border-color: #4d5d7c;
+        }
+
+        /* 模态框样式 */
+        #scheduleModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 500px;
+            overflow: hidden;
+            transition: background 0.5s;
+        }
+        .modal-header {
+            background: #1a73e8;
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.5s;
+        }
+        .modal-title {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-body {
+            padding: 15px;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #444;
+            transition: color 0.5s;
+            font-size: 14px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: background 0.5s, border-color 0.5s, color 0.5s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+        }
+        .modal-footer {
+            padding: 12px 15px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            transition: background 0.5s;
+        }
+        /* 暗色模式下的模态框 */
+        body.dark-mode .modal-content {
+            background: #2d2f33;
+        }
+        body.dark-mode .modal-header {
+            background: #1a5fb4;
+        }
+        body.dark-mode .form-group label {
+            color: #ddd;
+        }
+        body.dark-mode .form-control {
+            background: #3a3d42;
+            border-color: #444;
+            color: #eee;
+        }
+        body.dark-mode .modal-footer {
+            background: #25272b;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页头 -->
+    <header>
+        <div class="header-left">
+            <div class="timestamp" id="timestamp">2025年1月1日 00:00:00</div>
+            <div class="location">你所在位置：主页 &gt; 日程看板</div>
+        </div>
+        <div class="header-right">
+            <button id="themeToggle" class="theme-toggle-btn">
+                <i class="fas fa-moon"></i> <span class="theme-text">夜间模式</span>
+            </button>
+            <button class="home-btn" id="homeBtn">
+                <i class="fas fa-home"></i> <span class="home-text">主页</span>
+            </button>
+        </div>
+    </header>
+    
+    <!-- 主内容区 -->
+    <div class="container">
+        <h1>生活日程看板</h1>
+        
+        <!-- 控制区域 -->
+        <div class="controls">
+            <div class="filter-section">
+                <button id="addBtn" class="btn">
+                    <i class="fas fa-plus"></i> <span>添加日程</span>
+                </button>
+                <button id="filterBtn" class="btn btn-outline">
+                    <i class="fas fa-filter"></i> <span>筛选</span>
+                </button>
+                <!-- 新增导出/导入按钮 -->
+                <button id="exportJsonBtn" class="btn btn-outline" title="导出为JSON">
+                    <i class="fas fa-file-export"></i> <span>导出</span>
+                </button>
+                <button id="exportExcelBtn" class="btn btn-outline" title="导出为Excel">
+                    <i class="fas fa-file-excel"></i> <span>Excel</span>
+                </button>
+                <input type="file" id="importFileInput" accept=".json,.xlsx" style="display:none">
+                <button id="importBtn" class="btn btn-outline" title="导入JSON或Excel">
+                    <i class="fas fa-file-import"></i> <span>导入</span>
+                </button>
+            </div>
+            <div class="search-section">
+                <input type="text" id="searchInput" class="form-control" placeholder="搜索日程...">
+            </div>
+        </div>
+        
+        <div class="schedule-category" id="categoryFilters" style="display: none;">
+            <span class="category-tag tag-daily active" data-type="all">全部</span>
+            <span class="category-tag tag-daily" data-type="daily">日常</span>
+            <span class="category-tag tag-social" data-type="social">社交</span>
+            <span class="category-tag tag-bill" data-type="bill">缴费</span>
+            <span class="category-tag tag-traffic" data-type="traffic">交通</span>
+            <span class="category-tag tag-other" data-type="other">其他</span>
+        </div>
+        
+        <div id="scheduleBoard" class="schedule-board">
+            <!-- 日程内容将通过JS动态生成 -->
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer>
+        2025 TPZMN@天平啄木鸟版权所有
+    </footer>
+
+    <!-- 添加/编辑日程的模态框 -->
+    <div id="scheduleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">添加新日程</div>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label for="title">标题</label>
+                    <input type="text" id="title" class="form-control" placeholder="请输入日程标题">
+                </div>
+                <div class="form-group">
+                    <label for="date">日期</label>
+                    <input type="date" id="date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="type">类型</label>
+                    <select id="type" class="form-control">
+                        <option value="daily">日常</option>
+                        <option value="social">社交</option>
+                        <option value="bill">缴费</option>
+                        <option value="traffic">交通</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="priority">优先级</label>
+                    <select id="priority" class="form-control">
+                        <option value="普通">普通</option>
+                        <option value="重要">重要</option>
+                        <option value="紧急">紧急</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="desc">描述</label>
+                    <textarea id="desc" class="form-control" rows="3" placeholder="请输入日程详细描述"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelBtn" class="btn btn-outline">取消</button>
+                <button id="saveBtn" class="btn btn-success">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入SheetJS库 -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script>
+        // 初始日程数据
+        let scheduleEvents = [
+            {
+                id: 1,
+                title: "移动端适配由DeepSeek优化",
+                date: "2025-06-14",
+                type: "daily",
+                desc: "2025-6-14_1517",
+                priority: "重要"
+            },
+            {
+                id: 2,
+                title: "月度同事聚餐",
+                date: "2025-07-01",
+                type: "social",
+                desc: "准备礼品、话题",
+                priority: "紧急"
+            },
+            {
+                id: 3,
+                title: "交话费",
+                date: "2025-06-28",
+                type: "bill",
+                desc: "通过手机银行转账，注意余额充足，避免停机影响正常生活",
+                priority: "重要"
+            },
+            {
+                id: 4,
+                title: "定高铁票去看父母",
+                date: "2025-07-20",
+                type: "traffic",
+                desc: "准备身份证，提前预定车票，注意选择合适的时间段",
+                priority: "普通"
+            },
+            {
+                id: 5,
+                title: "购物充分给父母所在地领居",
+                date: "2025-06-16",
+                type: "other",
+                desc: "准备充分的礼物，免得村里人说闲话",
+                priority: "紧急"
+            },
+            {
+                id: 6,
+                title: "物业费缴纳",
+                date: "2025-06-30",
+                type: "bill",
+                desc: "5月物业费逾期未缴，物业已发送催缴通知，需立即处理",
+                priority: "重要"
+            },
+            {
+                id: 7,
+                title: "朋友婚礼",
+                date: "2025-06-25",
+                type: "daily",
+                desc: "准备红包，穿正式服装，提前半小时到达酒店",
+                priority: "重要"
+            },
+            {
+                id: 8,
+                title: "孩子钢琴考级报名（已逾期）",
+                date: "2025-06-18",
+                type: "other",
+                desc: "报名截止日期6月10日，逾期未报名需等待下一批次",
+                priority: "紧急"
+            },
+            {
+                id: 9,
+                title: "健身房会员续费",
+                date: "2025-06-28",
+                type: "bill",
+                desc: "本月续费可享受8折优惠，联系教练办理",
+                priority: "普通"
+            },
+            {
+                id: 10,
+                title: "大学同学毕业10周年聚会",
+                date: "2025-08-05",
+                type: "other",
+                desc: "提前统计参加人数，预订聚会场地，准备纪念礼物",
+                priority: "重要"
+            }
+        ];
+
+        // DOM元素
+        const scheduleBoard = document.getElementById('scheduleBoard');
+        const addBtn = document.getElementById('addBtn');
+        const filterBtn = document.getElementById('filterBtn');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilters = document.querySelectorAll('.category-tag');
+        const modal = document.getElementById('scheduleModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const modalTitle = document.getElementById('modalTitle');
+        const editId = document.getElementById('editId');
+        const titleInput = document.getElementById('title');
+        const dateInput = document.getElementById('date');
+        const typeInput = document.getElementById('type');
+        const priorityInput = document.getElementById('priority');
+        const descInput = document.getElementById('desc');
+        const timestamp = document.getElementById('timestamp');
+        const homeBtn = document.getElementById('homeBtn');
+        const themeToggleBtn = document.getElementById('themeToggle');
+
+        // 当前筛选状态
+        let currentFilter = 'all';
+        let currentSearch = '';
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTimestamp();
+            renderScheduleBoard();
+            setupEventListeners();
+            
+            // 设置默认日期为明天
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            dateInput.valueAsDate = tomorrow;
+            
+            // 每秒更新时间
+            setInterval(updateTimestamp, 1000);
+            
+            // 检查本地存储中的主题偏好
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i> <span class="theme-text">白天模式</span>';
+            }
+            
+            // 移动端文字优化
+            adjustTextForMobile();
+        });
+
+        // 更新时间戳
+        function updateTimestamp() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            timestamp.textContent = `${year}年${month}月${day}日 ${hours}:${minutes}:${seconds}`;
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            addBtn.addEventListener('click', () => openModal());
+            filterBtn.addEventListener('click', toggleCategoryFilters);
+            searchInput.addEventListener('input', handleSearch);
+            
+            categoryFilters.forEach(tag => {
+                tag.addEventListener('click', () => handleFilterChange(tag.dataset.type));
+            });
+            
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            saveBtn.addEventListener('click', saveSchedule);
+            
+            homeBtn.addEventListener('click', () => {
+                alert('返回主页功能');
+                // 实际应用中这里应该是 window.location.href = '/';
+            });
+            
+            // 添加昼夜模式切换事件
+            themeToggleBtn.addEventListener('click', toggleTheme);
+        }
+
+        // 切换昼夜模式
+        function toggleTheme() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            
+            if (isDarkMode) {
+                themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i> <span class="theme-text">白天模式</span>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i> <span class="theme-text">夜间模式</span>';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // 切换分类筛选显示
+        function toggleCategoryFilters() {
+            const filters = document.getElementById('categoryFilters');
+            filters.style.display = filters.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        // 处理筛选变化
+        function handleFilterChange(type) {
+            currentFilter = type;
+            
+            // 更新活跃状态
+            categoryFilters.forEach(tag => {
+                if (tag.dataset.type === type) {
+                    tag.classList.add('active');
+                } else {
+                    tag.classList.remove('active');
+                }
+            });
+            
+            renderScheduleBoard();
+        }
+
+        // 处理搜索
+        function handleSearch(e) {
+            currentSearch = e.target.value.toLowerCase();
+            renderScheduleBoard();
+        }
+
+        // 打开模态框（用于添加或编辑）
+        function openModal(schedule = null) {
+            if (schedule) {
+                // 编辑模式
+                modalTitle.textContent = '编辑日程';
+                editId.value = schedule.id;
+                titleInput.value = schedule.title;
+                dateInput.value = schedule.date;
+                typeInput.value = schedule.type;
+                priorityInput.value = schedule.priority;
+                descInput.value = schedule.desc;
+            } else {
+                // 添加模式
+                modalTitle.textContent = '添加新日程';
+                editId.value = '';
+                titleInput.value = '';
+                
+                // 设置默认日期为明天
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                dateInput.valueAsDate = tomorrow;
+                
+                typeInput.value = 'daily';
+                priorityInput.value = '普通';
+                descInput.value = '';
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // 保存日程（添加或更新）
+        function saveSchedule() {
+            const title = titleInput.value.trim();
+            const date = dateInput.value;
+            const type = typeInput.value;
+            const priority = priorityInput.value;
+            const desc = descInput.value.trim();
+            
+            if (!title) {
+                alert('请输入日程标题');
+                return;
+            }
+            
+            if (!date) {
+                alert('请选择日期');
+                return;
+            }
+            
+            const id = editId.value;
+            
+            if (id) {
+                // 更新现有日程
+                const index = scheduleEvents.findIndex(item => item.id == id);
+                if (index !== -1) {
+                    scheduleEvents[index] = {
+                        id: parseInt(id),
+                        title,
+                        date,
+                        type,
+                        priority,
+                        desc
+                    };
+                }
+            } else {
+                // 添加新日程
+                const newId = scheduleEvents.length > 0 
+                    ? Math.max(...scheduleEvents.map(item => item.id)) + 1 
+                    : 1;
+                    
+                scheduleEvents.push({
+                    id: newId,
+                    title,
+                    date,
+                    type,
+                    priority,
+                    desc
+                });
+            }
+            
+            closeModal();
+            renderScheduleBoard();
+        }
+
+        // 删除日程
+        function deleteSchedule(id) {
+            if (confirm('确定要删除这个日程吗？')) {
+                scheduleEvents = scheduleEvents.filter(item => item.id !== id);
+                renderScheduleBoard();
+            }
+        }
+
+        // 渲染日程看板
+        function renderScheduleBoard() {
+            scheduleBoard.innerHTML = '';
+            
+            const now = new Date();
+            const bjOffset = 8 * 60;
+            const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+            const bjDate = new Date(utc + bjOffset * 60000);
+
+            const y = bjDate.getFullYear();
+            const m = (bjDate.getMonth() + 1).toString().padStart(2, '0');
+            const d = bjDate.getDate().toString().padStart(2, '0');
+            const week = "日一二三四五六".charAt(bjDate.getDay());
+            
+            // 过滤日程
+            let filteredEvents = [...scheduleEvents];
+            
+            // 应用类型筛选
+            if (currentFilter !== 'all') {
+                filteredEvents = filteredEvents.filter(event => event.type === currentFilter);
+            }
+            
+            // 应用搜索筛选
+            if (currentSearch) {
+                filteredEvents = filteredEvents.filter(event => 
+                    event.title.toLowerCase().includes(currentSearch) || 
+                    event.desc.toLowerCase().includes(currentSearch)
+                );
+            }
+            
+            // 按日期排序（最近的在前）
+            filteredEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            if (filteredEvents.length === 0) {
+                scheduleBoard.innerHTML = `<div class="empty-tip">没有找到匹配的日程，点击"添加日程"创建新日程～</div>`;
+                return;
+            }
+            
+            filteredEvents.forEach(event => {
+                const eventDate = new Date(`${event.date}T00:00:00+08:00`);
+                const diffMs = eventDate - bjDate;
+                const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+                
+                // 设置状态和样式
+                let status, statusClass, itemClass = "";
+                if (days > 3) {
+                    status = `还有${days}天`;
+                    statusClass = "status-normal";
+                } else if (days > 0) {
+                    status = `仅剩${days}天`;
+                    statusClass = "status-warning";
+                } else if (days === 0) {
+                    status = "今天到期";
+                    statusClass = "status-danger";
+                } else {
+                    status = `已逾期${Math.abs(days)}天`;
+                    statusClass = "status-overdue";
+                    itemClass = "overdue";
+                }
+                
+                // 获取类型名称和样式类
+                const typeName = getTypeName(event.type);
+                let typeClass = "tag-other";
+                if (event.type === "daily") typeClass = "tag-daily";
+                else if (event.type === "social") typeClass = "tag-social";
+                else if (event.type === "bill") typeClass = "tag-bill";
+                else if (event.type === "traffic") typeClass = "tag-traffic";
+                
+                // 优先级样式
+                let priorityClass = "";
+                if (event.priority === "紧急") priorityClass = "紧急";
+                else if (event.priority === "重要") priorityClass = "重要";
+                else if (event.priority === "普通") priorityClass = "普通";
+                
+                // 星期几
+                const eventWeek = "日一二三四五六".charAt(eventDate.getDay());
+                
+                // 创建日程项HTML
+                const scheduleItem = document.createElement('div');
+                scheduleItem.className = `schedule-item ${itemClass}`;
+                scheduleItem.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-title" onclick="openModalForEdit(${event.id})">
+                            <span class="category-tag ${typeClass}">${typeName}</span>
+                            ${event.title}
+                            <span class="item-weekday">(${formatDate(event.date, true)} 星期${eventWeek})</span>
+                        </div>
+                        <div>
+                            <span class="item-date">${formatDate(event.date)}</span>
+                        </div>
+                    </div>
+                    <div class="item-status ${statusClass}">${status}</div>
+                    <div class="item-priority ${priorityClass}">${event.priority}</div>
+                    <div class="progress-bar"><div class="progress-inner" style="width:${calculateProgress(days)}%;"></div></div>
+                    <div class="item-desc">${event.desc}</div>
+                    <div class="item-actions">
+                        <button class="action-btn edit-btn" onclick="openModalForEdit(${event.id})">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteSchedule(${event.id})">
+                            <i class="fas fa-trash-alt"></i> 删除
+                        </button>
+                    </div>
+                `;
+                
+                scheduleBoard.appendChild(scheduleItem);
+            });
+        }
+
+        // 计算进度条宽度
+        function calculateProgress(days) {
+            if (days > 30) return 10;
+            if (days > 14) return 30;
+            if (days > 7) return 50;
+            if (days > 3) return 70;
+            if (days > 0) return 90;
+            return 100;
+        }
+
+        // 获取类型名称
+        function getTypeName(type) {
+            const types = {
+                "daily": "日常",
+                "social": "社交",
+                "bill": "缴费",
+                "traffic": "交通",
+                "other": "其他"
+            };
+            return types[type] || type;
+        }
+
+        // 格式化日期
+        function formatDate(dateStr, showMonth = false) {
+            const [year, month, day] = dateStr.split('-');
+            if (showMonth) return `${parseInt(month)}月${parseInt(day)}日`;
+            return `${year}年${parseInt(month)}月${parseInt(day)}日`;
+        }
+
+        // 为编辑打开模态框（全局函数）
+        window.openModalForEdit = function(id) {
+            const schedule = scheduleEvents.find(item => item.id === id);
+            if (schedule) {
+                openModal(schedule);
+            }
+        };
+
+        // 全局删除函数
+        window.deleteSchedule = function(id) {
+            if (confirm('确定要删除这个日程吗？')) {
+                scheduleEvents = scheduleEvents.filter(item => item.id !== id);
+                renderScheduleBoard();
+            }
+        };
+
+        // 导出文件名生成工具
+        function generateExportFilename(baseName, format) {
+            // 获取当前时间戳，格式为 yyyyMMdd_HHmmss
+            const now = new Date();
+            const pad = n => n.toString().padStart(2, '0');
+            const timestamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+
+            // 根据格式适配文件扩展名
+            let ext = '';
+            switch (format) {
+                case 'xlsx':
+                    ext = '.xlsx';
+                    break;
+                case 'csv':
+                    ext = '.csv';
+                    break;
+                default:
+                    ext = '';
+            }
+
+            return `${baseName}_${timestamp}${ext}`;
+        }
+
+        // 导出JSON
+        document.getElementById('exportJsonBtn').onclick = function() {
+            try {
+                if (!scheduleEvents || !Array.isArray(scheduleEvents)) {
+                    throw new Error('没有可导出的数据');
+                }
+                
+                const dataStr = JSON.stringify(scheduleEvents, null, 2);
+                const blob = new Blob([dataStr], {type: "application/json"});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                const timestamp = formatTimestamp(new Date());
+                a.download = `日程数据_${timestamp}.json`;
+                console.log('生成的文件名:', `日程数据_${timestamp}.json`);
+                
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+                
+            } catch (error) {
+                console.error('导出JSON失败:', error);
+                alert(`导出失败: ${error.message}`);
+            }
+        };
+
+        // 格式化时间为YYYYMMDD_HHmmss (全局函数)
+        function formatTimestamp(date) {
+            const pad = n => n.toString().padStart(2, '0');
+            return `${date.getFullYear()}${pad(date.getMonth()+1)}${pad(date.getDate())}_${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`;
+        }
+
+        // 导出Excel
+        document.getElementById('exportExcelBtn').onclick = function() {
+            // 转换为SheetJS格式
+            const ws = XLSX.utils.json_to_sheet(scheduleEvents.map(e => ({
+                编号: e.id,
+                标题: e.title,
+                日期: e.date,
+                类型: getTypeName(e.type),
+                优先级: e.priority,
+                描述: e.desc
+            })));
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "日程数据");
+            const timestamp = formatTimestamp(new Date());
+            XLSX.writeFile(wb, `日程数据_${timestamp}.xlsx`);
+        };
+
+        // 导入
+        document.getElementById('importBtn').onclick = function() {
+            document.getElementById('importFileInput').value = '';
+            document.getElementById('importFileInput').click();
+        };
+
+        document.getElementById('importFileInput').onchange = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (ext === 'json') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    try {
+                        const arr = JSON.parse(evt.target.result);
+                        if (!Array.isArray(arr)) throw new Error('格式错误');
+                        // 简单校验
+                        if (!arr.every(item => item.title && item.date)) throw new Error('缺少必要字段');
+                        // 重新编号，避免ID冲突
+                        arr.forEach((item, idx) => {
+                            item.id = idx + 1 + Math.max(0, ...scheduleEvents.map(e => e.id));
+                        });
+                        scheduleEvents = scheduleEvents.concat(arr);
+                        alert('JSON导入成功！');
+                        renderScheduleBoard();
+                    } catch (err) {
+                        alert('导入失败：' + err.message);
+                    }
+                };
+                reader.readAsText(file);
+            } else if (ext === 'xlsx') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    try {
+                        const workbook = XLSX.read(evt.target.result, {type: 'binary'});
+                        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const arr = XLSX.utils.sheet_to_json(sheet);
+                        // 字段映射
+                        const mapped = arr.map((row, idx) => ({
+                            id: idx + 1 + Math.max(0, ...scheduleEvents.map(e => e.id)),
+                            title: row['标题'] || row['title'] || '',
+                            date: row['日期'] || row['date'] || '',
+                            type: reverseTypeName(row['类型'] || row['type'] || '其他'),
+                            priority: row['优先级'] || row['priority'] || '普通',
+                            desc: row['描述'] || row['desc'] || ''
+                        }));
+                        if (!mapped.every(item => item.title && item.date)) throw new Error('缺少必要字段');
+                        scheduleEvents = scheduleEvents.concat(mapped);
+                        alert('Excel导入成功！');
+                        renderScheduleBoard();
+                    } catch (err) {
+                        alert('导入失败：' + err.message);
+                    }
+                };
+                reader.readAsBinaryString(file);
+            } else {
+                alert('仅支持JSON或Excel文件');
+            }
+        };
+
+        // 类型中文转英文
+        function reverseTypeName(name) {
+            const map = {
+                "日常": "daily",
+                "社交": "social",
+                "缴费": "bill",
+                "交通": "traffic",
+                "其他": "other"
+            };
+            return map[name] || "other";
+        }
+        
+        // 移动端文字优化
+        function adjustTextForMobile() {
+            if (window.innerWidth <= 480) {
+                const themeText = document.querySelector('.theme-text');
+                const homeText = document.querySelector('.home-text');
+                
+                if (themeText) themeText.textContent = '主题';
+                if (homeText) homeText.textContent = '主页';
+                
+                const buttons = document.querySelectorAll('.btn span');
+                buttons.forEach(span => {
+                    if (span.textContent === '添加日程') span.textContent = '添加';
+                    if (span.textContent === '筛选') span.textContent = '筛选';
+                    if (span.textContent === '导出') span.textContent = '导出';
+                    if (span.textContent === 'Excel') span.textContent = 'Excel';
+                    if (span.textContent === '导入') span.textContent = '导入';
+                });
+            }
+        }
+    </script>
+</body>
+</html>
