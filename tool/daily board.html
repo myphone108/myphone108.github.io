@@ -507,7 +507,18 @@
             gap: 10px;
             transition: background 0.3s ease;
         }
+
+        /* 常见的禁止缓存 HTTP 头 */
+        @httpd {
+            Cache-Control: no-store, no-cache, must-revalidate, max-age=0;
+            Pragma: no-cache;
+            Expires: 0;
+        }
     </style>
+    <!-- 禁止缓存的 meta 标签 -->
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
 </head>
 <body>
     <!-- 页头 -->
@@ -655,42 +666,42 @@
             {
                 id: 1,
                 title: "给家属录像",
-                date: getTodayTime("14:00"),
+                date: "2025-06-15T14:00",
                 type: "work",
-                desc: "确认通知书未实际送达家属。",
-                priority: "重要"
+                priority: "重要",
+                desc: "确认通知书未实际送达家属。"
             },
             {
                 id: 2,
                 title: "准备正式回应材料",
-                date: getTodayTime("15:00"),
+                date: "2025-06-15T15:00",
                 type: "work",
-                desc: "梳理证据和法条",
-                priority: "紧急"
+                priority: "紧急",
+                desc: "梳理证据和法条，确保能获公安机关书面正式回应"
             },
             {
                 id: 3,
                 title: "准备一审查卷事宜",
-                date: getTodayTime("16:00"),
+                date: "2025-06-15T16:00",
                 type: "work",
-                desc: "背诵50个新单词，复习昨天内容。",
-                priority: "紧急"
+                priority: "紧急",
+                desc: "梳理证据和法条，确保归档问题公安机关和法院的责任明确"
             },
             {
                 id: 4,
                 title: "梳理一审正卷缺失的证据和法条",
-                date: getTodayTime("17:00"),
+                date: "2025-06-15T17:00",
                 type: "work",
-                desc: "午餐后休息30分钟，保持精力充沛。",
-                priority: "紧急"
+                priority: "紧急",
+                desc: "梳理证据和法条，确保归档问题公安机关和法院的责任明确，力争获得档案室人员正式负责的回应"
             },
             {
                 id: 5,
                 title: "梳理二审的证据和法条",
-                date: getTodayTime("17:30"),
+                date: "2025-06-15T18:00",
                 type: "work",
-                desc: "下班后去超市采购晚餐食材。",
-                priority: "紧急"
+                priority: "紧急",
+                desc: "梳理证据和法条，确保归档问题公安机关和法院的责任明确，力争获得档案室人员正式负责的回应，准备充分的再审理由。"
             }
         ];
 
@@ -1059,6 +1070,9 @@
             const schedule = scheduleEvents.find(item => item.id === id);
             if (schedule) openModal(schedule);
         };
+
+        // 清空本地存储数据（用于调试，正式版请注释或删除）
+        // localStorage.removeItem('dailyTaskBoardData');
     </script>
 </body>
 </html>
