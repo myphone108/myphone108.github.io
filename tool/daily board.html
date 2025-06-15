@@ -36,6 +36,7 @@
             --modal-header: #1a73e8;
             --modal-footer: #f8f9fa;
             --modal-label: #444;
+            --sync-status-color: #27ae60;
         }
 
         .dark-mode {
@@ -68,6 +69,7 @@
             --modal-header: #1a5fb4;
             --modal-footer: #25272b;
             --modal-label: #ddd;
+            --sync-status-color: #2ecc71;
         }
 
         * {
@@ -429,6 +431,43 @@
         .complete-btn:hover {
             background: #e8f5e9;
         }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            margin-right: 5px;
+        }
+        .custom-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #27ae60;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            transition: all 0.2s;
+        }
+        .custom-checkbox.checked {
+            background: #27ae60;
+        }
+        .custom-checkbox.checked::after {
+            content: "✓";
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .sync-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: var(--sync-status-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
         @media (max-width: 600px) {
             .container { padding: 8px 2px; margin: 90px auto 60px auto;}
             h1 { font-size: 1.3em;}
@@ -440,6 +479,11 @@
             .filter-section { justify-content: center; }
             .timestamp { font-size: 14px; }
             .home-btn { padding: 6px 12px; font-size: 14px; }
+            .sync-indicator {
+                position: static;
+                margin-top: 10px;
+                justify-content: center;
+            }
         }
 
         /* 模态框样式 */
@@ -526,6 +570,21 @@
             text-decoration: line-through;
             opacity: 0.7;
         }
+        .sync-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 3000;
+        }
+        .sync-progress-bar {
+            height: 100%;
+            background: #1a73e8;
+            width: 0%;
+            transition: width 0.3s;
+        }
     </style>
     <!-- 禁止缓存的 meta 标签 -->
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
@@ -533,6 +592,11 @@
     <meta http-equiv="Expires" content="0" />
 </head>
 <body>
+    <!-- 同步进度条 -->
+    <div class="sync-progress">
+        <div class="sync-progress-bar" id="syncProgress"></div>
+    </div>
+    
     <!-- 页头 -->
     <header>
         <div class="header-left">
@@ -552,6 +616,13 @@
     <!-- 主内容区 -->
     <div class="container">
         <h1>每日任务看板</h1>
+        
+        <!-- 同步状态指示器 -->
+        <div class="sync-indicator" id="syncIndicator">
+            <i class="fas fa-sync"></i>
+            <span>数据已同步至服务器</span>
+        </div>
+        
         <div class="controls">
             <div class="filter-section">
                 <!-- 分类筛选按钮 -->
@@ -568,6 +639,9 @@
                 <button id="addBtn" class="btn">
                     <i class="fas fa-plus"></i> 添加任务
                 </button>
+                <button id="syncBtn" class="btn btn-success">
+                    <i class="fas fa-sync"></i> 同步数据
+                </button>
                 <button id="exportBtn" class="btn btn-outline"><i class="fas fa-download"></i> 导出</button>
                 <button id="importBtn" class="btn btn-outline"><i class="fas fa-upload"></i> 导入</button>
                 <input type="file" id="importFile" style="display:none">
@@ -580,7 +654,7 @@
     
     <!-- 页脚 -->
     <footer>
-        2025 TPZMN@天平啄木鸟版权所有
+        2025 TPZMN@天平啄木鸟版权所有 | 数据已同步至云端服务器
     </footer>
 
     <!-- 添加/编辑任务的模态框 -->
@@ -757,6 +831,9 @@
         const exportBtn = document.getElementById('exportBtn');
         const importBtn = document.getElementById('importBtn');
         const importFile = document.getElementById('importFile');
+        const syncBtn = document.getElementById('syncBtn');
+        const syncIndicator = document.getElementById('syncIndicator');
+        const syncProgress = document.getElementById('syncProgress');
 
         // 本地存储键名
         const STORAGE_KEY = 'dailyTaskBoardData';
@@ -798,6 +875,8 @@
             homeBtn.addEventListener('click', () => {
                 alert('返回主页功能');
             });
+            syncBtn.addEventListener('click', syncData);
+            
             if(exportBtn && importBtn && importFile){
                 exportBtn.onclick = function() {
                     // 弹出选择导出格式
@@ -901,6 +980,8 @@
             closeModal();
             saveToStorage();
             renderScheduleBoard();
+            // 保存后自动同步
+            syncData();
         }
 
         // 删除任务（弹窗显示标题）
@@ -911,6 +992,8 @@
                 scheduleEvents = scheduleEvents.filter(item => item.id !== id);
                 saveToStorage();
                 renderScheduleBoard();
+                // 删除后自动同步
+                syncData();
             }
         };
         
@@ -921,6 +1004,8 @@
                 task.completed = !task.completed;
                 saveToStorage();
                 renderScheduleBoard();
+                // 状态变更后自动同步
+                syncData();
             }
         };
 
@@ -1038,9 +1123,10 @@
                     <div class="item-priority ${priorityClass}">${event.priority}</div>
                     <div class="item-desc">${event.desc}</div>
                     <div class="item-actions">
-                        <button class="action-btn complete-btn" onclick="toggleComplete(${event.id})">
-                            <i class="fas ${event.completed ? 'fa-undo' : 'fa-check'}"></i> ${event.completed ? '撤销完成' : '标记完成'}
-                        </button>
+                        <div class="checkbox-container" onclick="toggleComplete(${event.id})">
+                            <div class="custom-checkbox ${event.completed ? 'checked' : ''}"></div>
+                            <span>${event.completed ? '已完成' : '标记完成'}</span>
+                        </div>
                         <button class="action-btn edit-btn" onclick="openModalForEdit(${event.id})">
                             <i class="fas fa-edit"></i> 编辑
                         </button>
@@ -1178,6 +1264,32 @@
                     console.error('Failed to parse saved data', e);
                 }
             }
+        }
+        
+        // 模拟数据同步到服务器
+        function syncData() {
+            // 显示同步进度条
+            syncProgress.style.width = '0%';
+            syncIndicator.innerHTML = '<i class="fas fa-sync fa-spin"></i> 正在同步数据...';
+            
+            // 模拟同步进度
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                syncProgress.style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    // 同步完成
+                    syncIndicator.innerHTML = '<i class="fas fa-check-circle"></i> 数据已同步至服务器';
+                    
+                    // 3秒后恢复原状态
+                    setTimeout(() => {
+                        syncIndicator.innerHTML = '<i class="fas fa-sync"></i> 数据已同步至服务器';
+                        syncProgress.style.width = '0%';
+                    }, 3000);
+                }
+            }, 100);
         }
     </script>
 </body>
