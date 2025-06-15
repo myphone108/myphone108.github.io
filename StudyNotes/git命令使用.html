@@ -12,6 +12,8 @@
             box-sizing: border-box;
             font-family: 'Consolas', 'Monaco', 'Menlo', 'DejaVu Sans Mono', 'Courier New', monospace;
         }
+        
+        /* 全局样式 */
         body {
             background-color: var(--bg-primary, #121212);
             color: var(--text-primary, #e0e0e0);
@@ -21,22 +23,129 @@
             display: flex;
             flex-direction: column;
         }
+        
+        /* 页眉样式 - 100%宽度并固定 */
         header {
             position: fixed;
             top: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
+            right: 0;
             width: 100%;
-            max-width: 1200px;
             background: rgba(30, 32, 36, 0.95);
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-            padding: 10px 15px;
+            padding: 10px 0;
             z-index: 1000;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             border-bottom: 1px solid #444;
         }
+        .header-content {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: rgba(30, 32, 36, 0.95);
+            text-align: center;
+            padding: 12px 0;
+            font-size: 14px;
+            color: #aaa;
+            border-top: 1px solid #444;
+            z-index: 1000;
+        }
+        .footer-content {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 主内容区 */
+        .container {
+            margin: 80px auto 60px auto;
+            background: rgba(37,37,37,0.98);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(60,120,200,0.12);
+            padding: 35px 20px 20px 20px;
+            position: relative;
+            flex: 1;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 400px;
+        }
+        
+        /* 标题样式 */
+        h1 {
+            color: var(--accent-blue);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
+            text-align: center;
+            background: none;
+            padding: 0;
+        }
+        
+        /* 白天模式样式 */
+        body.light-mode {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-card: #f9f9f9;
+            --bg-hover: #f0f0f0;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-blue: #1a73e8;
+            --accent-green: #34a853;
+            --accent-yellow: #f9ab00;
+            --accent-purple: #8e24aa;
+            background-color: var(--bg-primary);
+        }
+        
+        body.light-mode .container {
+            background: rgba(249, 249, 249, 0.98);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+        
+        body.light-mode header,
+        body.light-mode footer {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #ddd;
+        }
+        
+        body.light-mode .category-title,
+        body.light-mode th {
+            background-color: #f0f0f0;
+        }
+        
+        body.light-mode .table-container {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        body.light-mode .command {
+            color: #1e7b1e;
+        }
+        
+        body.light-mode .home-btn {
+            background: #1a73e8;
+            box-shadow: 0 2px 8px rgba(26,115,232,0.2);
+        }
+        
+        body.light-mode .home-btn:hover {
+            background: #0d62d9;
+            box-shadow: 0 4px 12px rgba(26,115,232,0.3);
+        }
+        
+        /* 页眉左侧样式 */
         .header-left {
             display: flex;
             flex-direction: column;
@@ -58,10 +167,12 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        
+        /* 页眉右侧按钮样式 */
         .header-right {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
         .home-btn {
             background: #1a73e8;
@@ -102,54 +213,155 @@
         .theme-toggle-btn i {
             font-size: 16px;
         }
-        footer {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 1200px;
-            background: rgba(30, 32, 36, 0.95);
-            text-align: center;
-            padding: 12px 0;
-            font-size: 14px;
-            color: #aaa;
-            border-top: 1px solid #444;
-            z-index: 1000;
-        }
-        .container {
-            margin: 80px auto 60px auto;
-            background: rgba(37,37,37,0.98);
-            border-radius: 18px;
-            box-shadow: 0 8px 32px rgba(60,120,200,0.12);
-            padding: 35px 20px 20px 20px;
+        
+        /* 搜索区域样式 */
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
             position: relative;
-            flex: 1;
+        }
+        .search-input {
             width: 100%;
-            max-width: 1200px;
-            min-height: 400px;
+            padding: 12px 15px;
+            background-color: var(--bg-secondary);
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
         }
-        h1 {
+        .search-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(100, 149, 237, 0.3);
+        }
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        
+        /* 分类容器样式 */
+        .category-container {
+            margin-bottom: 30px;
+        }
+        .category-title {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-secondary);
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .category-title:hover {
+            background-color: var(--bg-card);
+            transform: translateY(-2px);
+        }
+        .category-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            stroke: var(--accent-blue);
+            stroke-width: 2.5px;
+            transition: var(--transition);
+        }
+        .category-title:hover .category-icon {
+            stroke: var(--accent-green);
+            transform: rotate(90deg);
+        }
+        .category-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        /* 表格样式 */
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            background-color: var(--bg-card);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background-color: var(--bg-secondary);
+            text-align: left;
+            padding: 15px;
+            font-weight: bold;
             color: var(--accent-blue);
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
-            text-align: center;
-            background: none;
-            padding: 0;
+            border-bottom: 2px solid #333;
         }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            transition: var(--transition);
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover {
+            background-color: var(--bg-hover);
+        }
+        
+        /* 命令样式 */
+        .command {
+            color: var(--accent-green);
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        .example {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--accent-#ffc10700);
+            padding: 8px 12px;
+            border-radius: 0 4px 4px 0;
+            margin-top: 5px;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+        }
+        .note {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        .section-note {
+            background-color: var(--bg-secondary);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent-9c27b000);
+        }
+        .section-note strong {
+            color: var(--accent-blue);
+        }
+        
+        /* 响应式设计 */
         @media (max-width: 1300px) {
-            header, footer, .container { max-width: 100vw; }
+            .container { max-width: 100vw; }
+            .header-content, .footer-content { max-width: 100vw; }
         }
         @media (max-width: 768px) {
             .container { padding: 15px 5px; margin: 70px auto 50px auto; width: 99vw; }
-            header, footer { padding: 8px 8px; }
+            header, footer { padding: 8px 0; }
+            .header-content, .footer-content { padding: 0 8px; }
             .header-left { max-width: calc(100% - 160px); }
             .timestamp { font-size: 14px; }
             .location { font-size: 12px; }
             .home-btn { padding: 6px 10px; font-size: 13px; min-width: 70px; }
+            .header-right { gap: 5px; }
+            h1 { font-size: 1.8rem; }
+            .category-name { font-size: 1rem; }
+            td, th { padding: 12px; font-size: 0.9rem; }
         }
-        /* ...原有样式... */
+        
+        /* CSS变量定义 */
         :root {
             --bg-primary: #121212;
             --bg-secondary: #1e1e1e;
@@ -165,184 +377,21 @@
             --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             --transition: all 0.3s ease;
         }
-
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+        
+        /* 白天模式下的覆盖变量 */
+        body.light-mode :root {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-card: #f9f9f9;
+            --bg-hover: #f0f0f0;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-blue: #1a73e8;
+            --accent-green: #34a853;
+            --accent-yellow: #f9ab00;
+            --accent-purple: #8e24aa;
         }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            font-weight: normal;
-        }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 15px;
-            background-color: var(--bg-secondary);
-            border: 1px solid #333;
-            border-radius: 4px;
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 1rem;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .search-input:focus {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 2px rgba(100, 149, 237, 0.3);
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 15px;
-            color: var(--text-secondary);
-            cursor: pointer;
-        }
-
-        .category-container {
-            margin-bottom: 30px;
-        }
-
-        .category-title {
-            display: flex;
-            align-items: center;
-            background-color: var(--bg-secondary);
-            padding: 12px 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .category-title:hover {
-            background-color: var(--bg-card);
-            transform: translateY(-2px);
-        }
-
-        .category-icon {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-            stroke: var(--accent-blue);
-            stroke-width: 2.5px;
-            transition: var(--transition);
-        }
-
-        .category-title:hover .category-icon {
-            stroke: var(--accent-green);
-            transform: rotate(90deg);
-        }
-
-        .category-name {
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            background-color: var(--bg-card);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background-color: var(--bg-secondary);
-            text-align: left;
-            padding: 15px;
-            font-weight: bold;
-            color: var(--accent-blue);
-            border-bottom: 2px solid #333;
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #333;
-            transition: var(--transition);
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover {
-            background-color: var(--bg-hover);
-        }
-
-        .command {
-            color: var(--accent-green);
-            font-family: inherit;
-            font-size: 0.95rem;
-        }
-
-        .example {
-            background-color: rgba(0, 0, 0, 0.3);
-            border-left: 3px solid var(--accent-#ffc10700);
-            padding: 8px 12px;
-            border-radius: 0 4px 4px 0;
-            margin-top: 5px;
-            font-size: 0.85rem;
-            white-space: pre-wrap;
-        }
-
-        .note {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-top: 5px;
-        }
-
-        .section-note {
-            background-color: var(--bg-secondary);
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin: 20px 0;
-            font-size: 0.9rem;
-            border-left: 3px solid var(--accent-9c27b000);
-        }
-
-        .section-note strong {
-            color: var(--accent-blue);
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .category-name {
-                font-size: 1rem;
-            }
-            
-            td, th {
-                padding: 12px;
-                font-size: 0.9rem;
-            }
-        }
-
+        
         .highlight {
             background-color: rgba(156, 39, 176, 0.2);
             color: var(--accent-purple);
@@ -350,22 +399,27 @@
     </style>
 </head>
 <body>
-    <!-- 页头 -->
-    <header style="position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:1000;width:100%;max-width:1200px;">
+    <!-- 页头 - 宽度100% -->
+    <header>
+      <div class="header-content">
         <div class="header-left">
-            <div class="timestamp" id="timestamp">2025年6月15日 00:00:00</div>
+            <div class="timestamp" id="timestamp">2025年6月16日 00:00:00</div>
             <div class="location">你所在位置：Git命令学习手册</div>
         </div>
         <div class="header-right">
             <button class="home-btn" onclick="window.location.href='../tool/daily%20board.html'"><i class="fas fa-table"></i> <span>Daily Board</span></button>
             <button class="home-btn" onclick="window.location.href='../tool/Schedule.html'"><i class="fas fa-calendar-alt"></i> <span>Schedule</span></button>
-            <button class="home-btn" onclick="window.location.href='git命令使用.html'"><i class="fas fa-calendar-alt"></i> <span>Git命令学习手册</span></button>
+            <button class="home-btn" onclick="window.location.href='git命令使用.html'"><i class="fas fa-code-branch"></i> <span>Git手册</span></button>
             <button id="themeToggle" class="home-btn"><i class="fas fa-moon"></i> <span class="theme-text">夜间模式</span></button>
         </div>
+      </div>
     </header>
+    
+    <!-- 主内容区 -->
     <div class="container">
         <h1>Git 常用命令手册</h1>
-
+        
+        <!-- 搜索区域 -->
         <div class="search-container">
             <input type="text" class="search-input" id="searchInput" placeholder="搜索命令...">
             <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -373,7 +427,8 @@
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
         </div>
-
+        
+        <!-- 分类区域 -->
         <div class="category-container">
             <div class="category-title" onclick="toggleCategory('init')">
                 <svg class="category-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -412,7 +467,8 @@
                 </table>
             </div>
         </div>
-
+        
+        <!-- 文件操作部分 -->
         <div class="category-container">
             <div class="category-title" onclick="toggleCategory('file')">
                 <svg class="category-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -455,7 +511,8 @@
                 </table>
             </div>
         </div>
-
+        
+        <!-- 分支管理部分 -->
         <div class="category-container">
             <div class="category-title" onclick="toggleCategory('branch')">
                 <svg class="category-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -511,7 +568,8 @@
                 </table>
             </div>
         </div>
-
+        
+        <!-- 远程仓库部分 -->
         <div class="category-container">
             <div class="category-title" onclick="toggleCategory('remote')">
                 <svg class="category-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -560,7 +618,8 @@
                 </table>
             </div>
         </div>
-
+        
+        <!-- 版本控制部分 -->
         <div class="category-container">
             <div class="category-title" onclick="toggleCategory('version')">
                 <svg class="category-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -603,7 +662,8 @@
                 </table>
             </div>
         </div>
-
+        
+        <!-- 使用提示 -->
         <div class="section-note">
             <strong>Git 命令使用核心逻辑与注意事项：</strong>
             <div><strong>个人开发</strong>：通过 <code>init/add/commit</code> 管理本地代码版本，用 <code>log</code> 查看历史记录；</div>
@@ -613,10 +673,14 @@
             <div><strong>远程配置</strong>：首次操作远程仓库前，建议配置 SSH 密钥（<code>ssh-keygen</code>）以避免重复输入密码。</div>
         </div>
     </div>
+    
     <!-- 页脚 -->
     <footer>
-        &copy; 2025 myphone108.github.io
+      <div class="footer-content">
+        &copy; 2025 myphone108.github.io | 生活日程管理与学习笔记平台
+      </div>
     </footer>
+    
     <script>
     // 页眉时间动态更新
     function updateTime() {
@@ -631,59 +695,75 @@
     }
     setInterval(updateTime, 1000);
     updateTime();
-    // 夜间模式切换
+    
+    // 优化后的主题切换功能
     document.getElementById('themeToggle').onclick = function() {
-        document.body.classList.toggle('dark-mode');
-        var text = document.body.classList.contains('dark-mode') ? '日间模式' : '夜间模式';
+        const isDarkMode = document.body.classList.contains('light-mode');
+        document.body.classList.toggle('light-mode', !isDarkMode);
+        
+        var text = isDarkMode ? '夜间模式' : '日间模式';
         document.querySelector('.theme-text').textContent = text;
+        
         var icon = document.querySelector('#themeToggle i');
-        icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
+        icon.className = isDarkMode ? 'fas fa-moon' : 'fas fa-sun';
+        
+        // 保存主题设置
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     };
-        // 分类切换功能
-        function toggleCategory(id) {
-            const table = document.getElementById(`${id}Table`);
-            if (table.style.display === "none") {
-                table.style.display = "block";
-            } else {
-                table.style.display = "none";
-            }
+    
+    // 初始化时检查保存的主题
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+            document.querySelector('.theme-text').textContent = '日间模式';
+            document.querySelector('#themeToggle i').className = 'fas fa-sun';
         }
-
-        // 搜索功能
-        document.getElementById('searchInput').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const tables = document.querySelectorAll('.table-container table');
+        
+        // 初始化时显示所有表格
+        const tables = document.querySelectorAll('.table-container');
+        tables.forEach(table => {
+            table.style.display = "block";
+        });
+    });
+    
+    // 分类切换功能
+    function toggleCategory(id) {
+        const table = document.getElementById(`${id}Table`);
+        if (table.style.display === "none") {
+            table.style.display = "block";
+        } else {
+            table.style.display = "none";
+        }
+    }
+    
+    // 搜索功能
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const tables = document.querySelectorAll('.table-container table');
+        
+        tables.forEach(table => {
+            const rows = table.querySelectorAll('tbody tr');
             
-            tables.forEach(table => {
-                const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                let match = false;
+                const cells = row.querySelectorAll('td');
                 
-                rows.forEach(row => {
-                    let match = false;
-                    const cells = row.querySelectorAll('td');
-                    
-                    cells.forEach(cell => {
-                        if (cell.textContent.toLowerCase().includes(searchTerm)) {
-                            match = true;
-                            return;
-                        }
-                    });
-                    
-                    if (match) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().includes(searchTerm)) {
+                        match = true;
+                        return;
                     }
                 });
+                
+                if (match) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
             });
         });
-
-        // 初始化时显示所有表格
-        document.addEventListener('DOMContentLoaded', function() {
-            const tables = document.querySelectorAll('.table-container');
-            tables.forEach(table => {
-                table.style.display = "block";
-            });
-        });
+    });
     </script>
 </body>
 </html>
