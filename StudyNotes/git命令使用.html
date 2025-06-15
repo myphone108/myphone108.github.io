@@ -112,7 +112,14 @@
             width: 24px;
             height: 24px;
             margin-right: 10px;
-            color: var(--accent-blue);
+            stroke: var(--accent-blue);
+            stroke-width: 2.5px;
+            transition: var(--transition);
+        }
+
+        .category-title:hover .category-icon {
+            stroke: var(--accent-green);
+            transform: rotate(90deg);
         }
 
         .category-name {
@@ -163,7 +170,7 @@
 
         .example {
             background-color: rgba(0, 0, 0, 0.3);
-            border-left: 3px solid var(--accent-yellow);
+            border-left: 3px solid var(--accent-#ffc10700);
             padding: 8px 12px;
             border-radius: 0 4px 4px 0;
             margin-top: 5px;
@@ -183,7 +190,7 @@
             border-radius: var(--border-radius);
             margin: 20px 0;
             font-size: 0.9rem;
-            border-left: 3px solid var(--accent-purple);
+            border-left: 3px solid var(--accent-9c27b000);
         }
 
         .section-note strong {
@@ -214,7 +221,6 @@
 <body>
     <header>
         <h1>Git 常用命令手册</h1>
-        <p class="subtitle">专业、实用、酷炫的 Git 命令速查表格 | 程序员必备工具</p>
     </header>
 
     <div class="search-container">
@@ -457,13 +463,11 @@
 
     <div class="section-note">
         <strong>Git 命令使用核心逻辑与注意事项：</strong>
-        <ol>
-            <li><strong>个人开发</strong>：通过 <code>init/add/commit</code> 管理本地代码版本，用 <code>log</code> 查看历史记录；</li>
-            <li><strong>团队协作</strong>：使用 <code>clone/push/pull</code> 同步远程仓库，建议先 <code>pull</code> 再 <code>merge</code> 避免冲突；</li>
-            <li><strong>分支开发</strong>：通过 <code>branch/checkout/merge</code> 实现多版本并行开发，上线前合并到主分支；</li>
-            <li><strong>危险操作</strong>：<code>git reset --hard</code> 会彻底丢弃未提交修改，建议先使用 <code>git stash</code> 暂存工作区；</li>
-            <li><strong>远程配置</strong>：首次操作远程仓库前，建议配置 SSH 密钥（<code>ssh-keygen</code>）以避免重复输入密码。</li>
-        </ol>
+        <div><strong>个人开发</strong>：通过 <code>init/add/commit</code> 管理本地代码版本，用 <code>log</code> 查看历史记录；</div>
+        <div><strong>团队协作</strong>：使用 <code>clone/push/pull</code> 同步远程仓库，建议先 <code>pull</code> 再 <code>merge</code> 避免冲突；</div>
+        <div><strong>分支开发</strong>：通过 <code>branch/checkout/merge</code> 实现多版本并行开发，上线前合并到主分支；</div>
+        <div><strong>危险操作</strong>：<code>git reset --hard</code> 会彻底丢弃未提交修改，建议先使用 <code>git stash</code> 暂存工作区；</div>
+        <div><strong>远程配置</strong>：首次操作远程仓库前，建议配置 SSH 密钥（<code>ssh-keygen</code>）以避免重复输入密码。</div>
     </div>
 
     <script>
