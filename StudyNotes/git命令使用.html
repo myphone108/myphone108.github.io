@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git 常用命令手册</title>
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-card: #252525;
+            --bg-hover: #303030;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent-blue: #6495ed;
+            --accent-green: #4caf50;
+            --accent-yellow: #ffc107;
+            --accent-purple: #9c27b0;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Consolas', 'Monaco', 'Menlo', 'DejaVu Sans Mono', 'Courier New', monospace;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--accent-blue);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: normal;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--bg-secondary);
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(100, 149, 237, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .category-container {
+            margin-bottom: 30px;
+        }
+
+        .category-title {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-secondary);
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .category-title:hover {
+            background-color: var(--bg-card);
+            transform: translateY(-2px);
+        }
+
+        .category-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            color: var(--accent-blue);
+        }
+
+        .category-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            background-color: var(--bg-card);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: var(--bg-secondary);
+            text-align: left;
+            padding: 15px;
+            font-weight: bold;
+            color: var(--accent-blue);
+            border-bottom: 2px solid #333;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            transition: var(--transition);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .command {
+            color: var(--accent-green);
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        .example {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--accent-yellow);
+            padding: 8px 12px;
+            border-radius: 0 4px 4px 0;
+            margin-top: 5px;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+        }
+
+        .note {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .section-note {
+            background-color: var(--bg-secondary);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent-purple);
+        }
+
+        .section-note strong {
+            color: var(--accent-blue);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .category-name {
+                font-size: 1rem;
+            }
+            
+            td, th {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .highlight {
+            background-color: rgba(156, 39, 176, 0.2);
+            color: var(--accent-purple);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Git 常用命令手册</h1>
+        <p class="subtitle">专业、实用、酷炫的 Git 命令速查表格 | 程序员必备工具</p>
+    </header>
+
+    <div class="search-container">
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索命令...">
+        <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+    </div>
+
+    <div class="category-container">
+        <div class="category-title" onclick="toggleCategory('init')">
+            <svg class="category-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+            <div class="category-name">一、初始化与配置命令</div>
+        </div>
+        <div class="table-container" id="initTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th>命令</th>
+                        <th>作用</th>
+                        <th>示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="command">git init</span></td>
+                        <td>在当前目录创建新的 Git 仓库（生成 <code>.git</code> 隐藏文件夹）</td>
+                        <td><div class="example">git init</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git config --global user.name</span></td>
+                        <td>全局配置用户名（仅需设置一次）</td>
+                        <td><div class="example">git config --global user.name "张三"</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git config --global user.email</span></td>
+                        <td>全局配置用户邮箱</td>
+                        <td><div class="example">git config --global user.email "zhangsan@example.com"</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="category-container">
+        <div class="category-title" onclick="toggleCategory('file')">
+            <svg class="category-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+            <div class="category-name">二、文件操作与提交命令</div>
+        </div>
+        <div class="table-container" id="fileTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th>命令</th>
+                        <th>作用</th>
+                        <th>示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="command">git status</span></td>
+                        <td>查看仓库中文件的状态（修改、未跟踪等）</td>
+                        <td><div class="example">git status</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git add &lt;文件路径&gt;</span></td>
+                        <td>将文件添加到暂存区（准备提交）</td>
+                        <td><div class="example">git add README.md<br>git add .</div><div class="note">（添加所有文件）</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git commit -m "提交备注"</span></td>
+                        <td>将暂存区文件提交到本地仓库，附描述性备注</td>
+                        <td><div class="example">git commit -m "修复登录页面bug"</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git diff</span></td>
+                        <td>查看未提交的文件修改差异（对比工作区与暂存区/仓库）</td>
+                        <td><div class="example">git diff<br>git diff --staged</div><div class="note">（对比暂存区与仓库）</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="category-container">
+        <div class="category-title" onclick="toggleCategory('branch')">
+            <svg class="category-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="8" x2="18" y2="8"></line>
+                <line x1="18" y1="16" x2="22" y2="16"></line>
+                <line x1="16" y1="8" x2="8" y2="8"></line>
+                <line x1="8" y1="16" x2="16" y2="16"></line>
+                <line x1="10" y1="4" x2="6" y2="4"></line>
+                <line x1="6" y1="12" x2="10" y2="12"></line>
+                <line x1="4" y1="8" x2="8" y2="8"></line>
+                <line x1="6" y1="4" x2="2" y2="4"></line>
+                <line x1="2" y1="12" x2="6" y2="12"></line>
+                <line x1="4" y1="16" x2="8" y2="16"></line>
+            </svg>
+            <div class="category-name">三、分支管理命令</div>
+        </div>
+        <div class="table-container" id="branchTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th>命令</th>
+                        <th>作用</th>
+                        <th>示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="command">git branch</span></td>
+                        <td>查看所有本地分支</td>
+                        <td><div class="example">git branch</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git branch &lt;分支名&gt;</span></td>
+                        <td>创建新分支</td>
+                        <td><div class="example">git branch feature/login</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git checkout &lt;分支名&gt;</span></td>
+                        <td>切换到指定分支（Git 2.23+可用 <code>git switch</code>）</td>
+                        <td><div class="example">git checkout dev<br>git switch main</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git merge &lt;分支名&gt;</span></td>
+                        <td>将指定分支合并到当前分支</td>
+                        <td><div class="example">git merge feature/login</div><div class="note">（在 <code>main</code> 分支执行，合并 <code>feature/login</code>）</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git branch -d &lt;分支名&gt;</span></td>
+                        <td>删除本地分支（需先切换到其他分支）</td>
+                        <td><div class="example">git branch -d feature/login</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="category-container">
+        <div class="category-title" onclick="toggleCategory('remote')">
+            <svg class="category-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <div class="category-name">四、远程仓库操作命令</div>
+        </div>
+        <div class="table-container" id="remoteTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th>命令</th>
+                        <th>作用</th>
+                        <th>示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="command">git clone &lt;远程仓库URL&gt;</span></td>
+                        <td>从远程仓库克隆项目到本地</td>
+                        <td><div class="example">git clone https://github.com/user/repo.git</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git remote add origin &lt;URL&gt;</span></td>
+                        <td>添加远程仓库（<code>origin</code> 为默认别名）</td>
+                        <td><div class="example">git remote add origin https://github.com/user/repo.git</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git push origin &lt;分支名&gt;</span></td>
+                        <td>将本地分支推送到远程仓库</td>
+                        <td><div class="example">git push origin main</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git pull origin &lt;分支名&gt;</span></td>
+                        <td>从远程仓库拉取代码并合并到本地</td>
+                        <td><div class="example">git pull origin dev</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git fetch origin</span></td>
+                        <td>仅拉取远程仓库更新（不自动合并）</td>
+                        <td><div class="example">git fetch origin</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="category-container">
+        <div class="category-title" onclick="toggleCategory('version')">
+            <svg class="category-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            <div class="category-name">五、版本查看与回退命令</div>
+        </div>
+        <div class="table-container" id="versionTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th>命令</th>
+                        <th>作用</th>
+                        <th>示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="command">git log</span></td>
+                        <td>查看提交历史（含时间、作者、备注）</td>
+                        <td><div class="example">git log<br>git log --oneline</div><div class="note">（简洁模式）</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git log -p &lt;文件路径&gt;</span></td>
+                        <td>查看指定文件的修改历史详情</td>
+                        <td><div class="example">git log -p README.md</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git reset --hard &lt;commit哈希值&gt;</span></td>
+                        <td>强制回退到指定历史版本（丢弃后续修改，谨慎使用）</td>
+                        <td><div class="example">git reset --hard a1b2c3</div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">git reflog</span></td>
+                        <td>查看所有分支的历史操作记录（含回退操作）</td>
+                        <td><div class="example">git reflog</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-note">
+        <strong>Git 命令使用核心逻辑与注意事项：</strong>
+        <ol>
+            <li><strong>个人开发</strong>：通过 <code>init/add/commit</code> 管理本地代码版本，用 <code>log</code> 查看历史记录；</li>
+            <li><strong>团队协作</strong>：使用 <code>clone/push/pull</code> 同步远程仓库，建议先 <code>pull</code> 再 <code>merge</code> 避免冲突；</li>
+            <li><strong>分支开发</strong>：通过 <code>branch/checkout/merge</code> 实现多版本并行开发，上线前合并到主分支；</li>
+            <li><strong>危险操作</strong>：<code>git reset --hard</code> 会彻底丢弃未提交修改，建议先使用 <code>git stash</code> 暂存工作区；</li>
+            <li><strong>远程配置</strong>：首次操作远程仓库前，建议配置 SSH 密钥（<code>ssh-keygen</code>）以避免重复输入密码。</li>
+        </ol>
+    </div>
+
+    <script>
+        // 分类切换功能
+        function toggleCategory(id) {
+            const table = document.getElementById(`${id}Table`);
+            if (table.style.display === "none") {
+                table.style.display = "block";
+            } else {
+                table.style.display = "none";
+            }
+        }
+
+        // 搜索功能
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const tables = document.querySelectorAll('.table-container table');
+            
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tbody tr');
+                
+                rows.forEach(row => {
+                    let match = false;
+                    const cells = row.querySelectorAll('td');
+                    
+                    cells.forEach(cell => {
+                        if (cell.textContent.toLowerCase().includes(searchTerm)) {
+                            match = true;
+                            return;
+                        }
+                    });
+                    
+                    if (match) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 初始化时显示所有表格
+        document.addEventListener('DOMContentLoaded', function() {
+            const tables = document.querySelectorAll('.table-container');
+            tables.forEach(table => {
+                table.style.display = "block";
+            });
+        });
+    </script>
+</body>
+</html>
