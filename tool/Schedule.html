@@ -1,5 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?c9bbf9510c5a5ed16e3998c3c8276110";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -737,11 +746,11 @@
             <div class="location">你所在位置：主页 &gt; 日程看板</div>
         </div>
         <div class="header-right">
-            <button id="themeToggle" class="theme-toggle-btn">
-                <i class="fas fa-moon"></i> <span class="theme-text">夜间模式</span>
+            <button id="themeToggle" class="home-btn">
+            <i class="fas fa-moon"></i> <span class="theme-text">夜间模式</span>
             </button>
-            <button class="home-btn" id="homeBtn">
-                <i class="fas fa-home"></i> <span class="home-text">主页</span>
+            <button class="home-btn" id="homeBtn" onclick="window.location.href='https://myphone108.github.io'">
+            <i class="fas fa-home"></i> 返回主页
             </button>
         </div>
     </header>
