@@ -744,22 +744,6 @@
         // 本地存储键名
         const STORAGE_KEY = 'dailyTaskBoardData';
 
-        // 读取本地存储
-        function loadFromStorage() {
-            const data = localStorage.getItem(STORAGE_KEY);
-            if (data) {
-                try {
-                    scheduleEvents = JSON.parse(data);
-                } catch (e) {
-                    // 数据损坏时忽略
-                }
-            }
-        }
-
-        // 保存到本地存储
-        function saveToStorage() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(scheduleEvents));
-        }
 
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
